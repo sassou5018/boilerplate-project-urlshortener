@@ -24,17 +24,11 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
+
 // Your first API endpoint
 app.post('/api/shorturl', function(req, res) {
   const url = req.body.url;
-  let dnsLookUp;
-  dns.lookup(url, (err, address, family) => {
-    if (err) {
-      res.json({error: 'invalid URL'});
-    } else {
-      dnsLookUp = address;
-    }
-  });
+  
   if(isURL(url)) {
   const shortUrl = nanoid(6);
   const newUrl = new urlModel({
@@ -48,6 +42,8 @@ app.post('/api/shorturl', function(req, res) {
       res.json({ original_url: data.original_url, short_url: data.short_url });
     }
   });
+} else {
+  res.json({ error: 'invalid URL' });
 }
 
 });
